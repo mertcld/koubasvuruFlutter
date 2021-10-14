@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:basvurukayit/models/user_model.dart';
 import 'package:basvurukayit/screens/cap_basvuru_ekrani.dart';
+import 'package:basvurukayit/screens/dgs_basvuru_ekrani.dart';
+import 'package:basvurukayit/screens/intibak_basvuru_ekrani.dart';
 import 'package:basvurukayit/screens/login_ekrani.dart';
 import 'package:basvurukayit/screens/yatay_gecis_basvuru_ekrani.dart';
 import 'package:basvurukayit/screens/yaz_okulu_basvuru_ekrani.dart';
@@ -124,7 +126,22 @@ class _SecimEkraniState extends State<SecimEkrani> {
                 child: Text('DGS Başvuru ekranı'),
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CapBasvuru()));
+                      MaterialPageRoute(builder: (context) => DgsBasvuru()));
+                },
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    padding: (EdgeInsets.fromLTRB(10, 10, 10, 10)),
+                    textStyle: TextStyle(
+                      fontSize: 20,
+                    ),
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0))),
+              ),
+              ElevatedButton(
+                child: Text('Ders İntibakıranı'),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => IntibakBasvuru()));
                 },
                 style: ElevatedButton.styleFrom(
                     primary: Colors.green,
@@ -139,7 +156,7 @@ class _SecimEkraniState extends State<SecimEkrani> {
                   label: Text("Çıkış Yap"),
                   onPressed: () {
                     cikisYap(context);
-                  }),
+                  }), //aa
             ],
           ),
         ),
