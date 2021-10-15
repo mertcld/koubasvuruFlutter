@@ -1,3 +1,10 @@
+import 'dart:ui';
+
+import 'package:basvurukayit/models/user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,31 +18,51 @@ class CapBasvuru extends StatefulWidget {
 }
 
 class _CapBasvuruState extends State<CapBasvuru> {
-  final checkBoxList = [
-    CheckBoxModal(title: 'KURUM İÇİ YATAY GEÇİŞ'),
-    CheckBoxModal(title: 'KURUMLAR ARASI YATAY GEÇİŞ'),
-    CheckBoxModal(title: 'MER. YER. PUANIYLA YATAY GEÇİŞ '),
-    CheckBoxModal(title: 'YURT DIŞI YATAY GEÇİŞ BAŞVURUSU')
-  ];
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel loggedInUser = UserModel();
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
+        .get()
+        .then((value) {
+      this.loggedInUser = UserModel.fromMap(value.data());
+      setState(() {});
+    });
+  }
+  // final checkBoxList = [
+  //   CheckBoxModal(title: 'KURUM İÇİ YATAY GEÇİŞ'),
+  //   CheckBoxModal(title: 'KURUMLAR ARASI YATAY GEÇİŞ'),
+  //   CheckBoxModal(title: 'MER. YER. PUANIYLA YATAY GEÇİŞ '),
+  //   CheckBoxModal(title: 'YURT DIŞI YATAY GEÇİŞ BAŞVURUSU')
+  // ];
 
   final checkBoxOgrenim = [
     CheckBoxModal(title: '1.Öğretim'),
     CheckBoxModal(title: '2.Öğretim')
   ];
+  final checkBoxYariyil = [
+    CheckBoxModal(title: '3. Yarıyıl'),
+    CheckBoxModal(title: '4. Yarıyıl'),
+    CheckBoxModal(title: '5. Yarıyıl'),
+    CheckBoxModal(title: '6. Yarıyıl'),
+  ];
   final checkBoxSinif = [
-    CheckBoxModal(title: '1'),
-    CheckBoxModal(title: '2'),
-    CheckBoxModal(title: '3'),
-    CheckBoxModal(title: '4'),
-    CheckBoxModal(title: '5 ve üzeri'),
+    CheckBoxModal(title: '2.Sınıf'),
+    CheckBoxModal(title: '3. Sınıf'),
   ];
-  final checkBoxDisiplin = [
-    CheckBoxModal(title: 'VAR'),
-    CheckBoxModal(title: 'YOK')
-  ];
+  // final checkBoxDisiplin = [
+  //   CheckBoxModal(title: 'VAR'),
+  //   CheckBoxModal(title: 'YOK')
+  // ];
   final checkBoxBasvuruOnay = [
-    CheckBoxModal(title: 'BAŞVURUSU UYGUNDUR'),
-    CheckBoxModal(title: 'BAŞVURUSU UYGUN DEĞİLDİR')
+    CheckBoxModal(title: 'İncelendi'),
+    CheckBoxModal(title: 'Onaylandı'),
+    CheckBoxModal(title: 'Kabul edildi'),
+    CheckBoxModal(title: 'Reddedildi'),
   ];
   @override
   Widget build(BuildContext context) {
@@ -53,9 +80,10 @@ class _CapBasvuruState extends State<CapBasvuru> {
               Container(
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: Text(
-                  '       KOCAELİ ÜNİVERSİTESİ\nYATAY GEÇİŞ BAŞVURU FORMU',
+                  'KOCAELİ ÜNİVERSİTESİ\nÇAP BAŞVURU FORMU',
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
                     color: Colors.green,
                   ),
                 ),
@@ -63,32 +91,17 @@ class _CapBasvuruState extends State<CapBasvuru> {
               ListView(
                 shrinkWrap: true,
                 children: [
-                  Text(
-                    '1-Başvuru Türü',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
                   Divider(
                     color: Colors.black,
                   ),
-                  ...checkBoxList
-                      .map((item) => ListTile(
-                            onTap: () => onItemClicked(item),
-                            leading: Checkbox(
-                              value: item.value,
-                              onChanged: (value) => onItemClicked(item),
-                            ),
-                            title: Text(item.title),
-                          ))
-                      .toList()
                 ],
               ),
-              Divider(
-                color: Colors.black,
-              ),
               Text(
-                '2-Kişisel Bilgiler',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                '1- Başvuru Yapan Öğrencinin : ',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                    fontSize: 20.0),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
@@ -105,67 +118,15 @@ class _CapBasvuruState extends State<CapBasvuru> {
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 child: TextFormField(
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'TC NO'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Doğum Tarihi'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'E-Posta'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'GSM'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Adres'),
-                ),
-              ),
-              Divider(
-                color: Colors.black,
-              ),
-              Text(
-                '3-Öğrenimine ilişkin bilgiler',
-                style: TextStyle(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Kayıtlı Olunan Üniversite'),
+                      labelText: 'Kayıt Olduğu Fakülte'),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 child: TextFormField(
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Kayıtlı Olunan Fakülte/Yüksekokul'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Kayıtlı Olunan Bölüm/Program'),
+                      border: OutlineInputBorder(), labelText: 'Öğrenci No'),
                 ),
               ),
               ListView(
@@ -176,7 +137,7 @@ class _CapBasvuruState extends State<CapBasvuru> {
                   Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
-                        'Öğrenim Türü',
+                        'Kayıt olduğu lisans programı',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -197,6 +158,14 @@ class _CapBasvuruState extends State<CapBasvuru> {
                       .toList()
                 ],
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Kayıt Olduğu Lisans Programı Adı'),
+                ),
+              ),
               ListView(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
@@ -205,7 +174,101 @@ class _CapBasvuruState extends State<CapBasvuru> {
                   Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
-                        'Sınıfı',
+                        'Kayıt Olduğu Programın Yarıyılı',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.start,
+                      )),
+                  Divider(
+                    color: Colors.black,
+                  ),
+                  ...checkBoxYariyil
+                      .map((item) => ListTile(
+                            onTap: () => onItemClicked(item),
+                            leading: Checkbox(
+                              value: item.value,
+                              onChanged: (value) => onItemClicked(item),
+                            ),
+                            title: Text(item.title),
+                          ))
+                      .toList()
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText:
+                          'Kayıt Olduğu Programdaki Not Ortalaması (AGNO)'),
+                ),
+              ),
+              Text(
+                '2-Başvuru Bilgileri',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                    fontSize: 20.0),
+                textAlign: TextAlign.center,
+              ),
+              Divider(
+                color: Colors.black,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Başvuru Yapacağı Fakülte'),
+                ),
+              ),
+              ListView(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                physics: AlwaysScrollableScrollPhysics(),
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text(
+                        'Başvuru yapacağı lisans programı',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.start,
+                      )),
+                  Divider(
+                    color: Colors.black,
+                  ),
+                  ...checkBoxOgrenim
+                      .map((item) => ListTile(
+                            onTap: () => onItemClicked(item),
+                            leading: Checkbox(
+                              value: item.value,
+                              onChanged: (value) => onItemClicked(item),
+                            ),
+                            title: Text(item.title),
+                          ))
+                      .toList()
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Başvuru Yapacağı Lisans Programı Adı'),
+                ),
+              ),
+              ListView(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                physics: AlwaysScrollableScrollPhysics(),
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text(
+                        'Başvuru Yapacağı Lisans Programı Sınıfı',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -234,7 +297,7 @@ class _CapBasvuruState extends State<CapBasvuru> {
                   Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(
-                        'Disiplin Cezası',
+                        'Başvuru Kabul Durumu',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -243,160 +306,6 @@ class _CapBasvuruState extends State<CapBasvuru> {
                   Divider(
                     color: Colors.black,
                   ),
-                  ...checkBoxDisiplin
-                      .map((item) => ListTile(
-                            onTap: () => onItemClicked(item),
-                            leading: Checkbox(
-                              value: item.value,
-                              onChanged: (value) => onItemClicked(item),
-                            ),
-                            title: Text(item.title),
-                          ))
-                      .toList()
-                ],
-              ),
-              Divider(
-                color: Colors.black,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'GENEL NOT ORTALAMASI'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'ÖĞRENCİ NUMARASI'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'KAYITLI ÜNİVERSİTEYE YERLEŞME YILI'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'YERLEŞİLEN PUAN TÜRÜ VE PUANI'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'YABANCI DİL PUANI VE TÜRÜ'),
-                ),
-              ),
-              Divider(
-                color: Colors.black,
-              ),
-              Text(
-                '4-ADAYIN BAŞVURDUĞU YÜKSEKÖĞRETİM PROGRAMINA İLİŞKİN BİLGİLER',
-                style: TextStyle(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'FAKÜLTE / YÜKSEKOKUL/MYO.  ADI'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'BÖLÜM/PROGRAM ADI'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText:
-                          'BAŞVURULAN PROGRAMIN YERLEŞİLEN YILA AİT PUANI'),
-                ),
-              ),
-              ListView(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                physics: AlwaysScrollableScrollPhysics(),
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(
-                        'Öğrenim Türü',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.start,
-                      )),
-                  Divider(
-                    color: Colors.black,
-                  ),
-                  ...checkBoxOgrenim
-                      .map((item) => ListTile(
-                            onTap: () => onItemClicked(item),
-                            leading: Checkbox(
-                              value: item.value,
-                              onChanged: (value) => onItemClicked(item),
-                            ),
-                            title: Text(item.title),
-                          ))
-                      .toList()
-                ],
-              ),
-              Divider(
-                color: Colors.black,
-              ),
-              Card(
-                margin: EdgeInsets.fromLTRB(2, 2, 2, 2),
-                child: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Column(
-                    children: [
-                      Text(
-                          'Beyan ettiğim bilgilerin veya belgelerin gerçeğe aykırı olması veya daha önce yatay geçiş yapmış olmam halinde hakkımda cezai işlemlerin yürütüleceğini ve kaydım yapılmış olsa dahi silineceğini bildiğimi kabul ediyorum.'),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Text(
-                        ' Tarih : ../.../...                                           Ad-Soyad İmza',
-                      ),
-                      SizedBox(
-                        height: 15,
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Divider(
-                color: Colors.black,
-              ),
-              Text(
-                'BU BÖLÜM ÜNİVERSİTE YETKİLİ BİRİMLERİNCE DOLDURULACAKTIR',
-                style: TextStyle(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              ListView(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                physics: AlwaysScrollableScrollPhysics(),
-                children: [
                   ...checkBoxBasvuruOnay
                       .map((item) => ListTile(
                             onTap: () => onItemClicked(item),
@@ -408,29 +317,6 @@ class _CapBasvuruState extends State<CapBasvuru> {
                           ))
                       .toList()
                 ],
-              ),
-              Card(
-                margin: EdgeInsets.fromLTRB(2, 2, 2, 2),
-                child: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Column(
-                    children: [
-                      Text(
-                          'Varsa açıklamalar : .....................................'),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Text(
-                        ' Tarih : ..../.../.....                           ',
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                          ' Başvuruyu alan görevlinin                                 Ad-Soyad İmza')
-                    ],
-                  ),
-                ),
               ),
             ],
           ),

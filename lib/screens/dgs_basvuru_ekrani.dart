@@ -98,7 +98,7 @@ class _DgsBasvuruState extends State<DgsBasvuru> {
                 color: Colors.black,
               ),*/
               Text(
-                '2-Kişisel Bilgiler',
+                '1-Kişisel Bilgiler',
                 style: TextStyle(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
@@ -180,7 +180,7 @@ class _DgsBasvuruState extends State<DgsBasvuru> {
                 color: Colors.black,
               ),
               Text(
-                '3-Öğrenimine ilişkin bilgiler\n Ön Lisans Eğitim Bilgisi',
+                '2-Öğrenimine ilişkin bilgiler\n Ön Lisans Eğitim Bilgisi',
                 
                 style: TextStyle(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
